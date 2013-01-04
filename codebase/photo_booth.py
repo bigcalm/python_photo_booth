@@ -41,6 +41,7 @@ class PhotoBooth:
         
         self.pin = '';
         self.entryPin = self.builder.get_object("entryPin")
+        self.buttonPinCancel = self.builder.get_object("buttonPinCancel")
         self.buttonPin1 = self.builder.get_object("buttonPin1")
         self.buttonPin2 = self.builder.get_object("buttonPin2")
         self.buttonPin3 = self.builder.get_object("buttonPin3")
@@ -51,8 +52,8 @@ class PhotoBooth:
         self.buttonPin8 = self.builder.get_object("buttonPin8")
         self.buttonPin9 = self.builder.get_object("buttonPin9")
         self.buttonPin0 = self.builder.get_object("buttonPin0")
-        self.buttonPinStar = self.builder.get_object("buttonPinStar")
-        self.buttonPinHash = self.builder.get_object("buttonPinHash")
+        self.buttonPinOk = self.builder.get_object("buttonPinOk")
+        self.buttonPinCancel = self.builder.get_object("buttonPinCancel")
         
         self.buttonPin1.connect("clicked", self.pinAddNumber, "1")
         self.buttonPin2.connect("clicked", self.pinAddNumber, "2")
@@ -64,24 +65,30 @@ class PhotoBooth:
         self.buttonPin8.connect("clicked", self.pinAddNumber, "8")
         self.buttonPin9.connect("clicked", self.pinAddNumber, "9")
         self.buttonPin0.connect("clicked", self.pinAddNumber, "0")
-        self.buttonPinStar.connect("clicked", self.pinSubmit, self.pin)
-        self.buttonPinHash.connect("clicked", self.pinClear, self.pin)
+        self.buttonPinOk.connect("clicked", self.pinSubmit, self.pin)
+        self.buttonPinCancel.connect("clicked", self.hidePin)
+        
         
         # Admin dialog
         self.dialogAdmin = self.builder.get_object("dialogAdmin")
-        
+
+        self.buttonAdminCancel = self.builder.get_object("buttonAdminCancel")
+        self.buttonAdminCancel.connect("clicked", self.hideAdmin)
+
+        # General tab
         self.buttonFullscreen = self.builder.get_object("buttonFullscreen")
-        # self.buttonFullscreen.connect("clicked", self.fullscreen)
+        self.buttonFullscreen.connect("clicked", self.fullscreen)
         
         self.buttonLeaveFullscreen = self.builder.get_object("buttonLeaveFullscreen")
-        # self.buttonLeaveFullscreen.connect("clicked", self.leaveFullscreen)
+        self.buttonLeaveFullscreen.connect("clicked", self.leaveFullscreen)
         
-        self.buttonCancel = self.builder.get_object("buttonCancel")
-        # self.buttonCancel.connect("clicked", self.hideAdmin)
-
         self.buttonQuit = self.builder.get_object("buttonQuit")
-        # self.buttonQuit.connect("clicked", self.quitApp)
-        
+        self.buttonQuit.connect("clicked", self.quitApp)
+
+
+
+
+
         
         # Set up the gstreamer pipepile
         self.player = gst.parse_launch ("v4l2src device=/dev/video0 !  autovideosink")
@@ -101,6 +108,11 @@ class PhotoBooth:
     
     # Pin functions
     
+    def hidePin(self, widget, data = None):
+        self.pin = '';
+        self.entryPin.set_text(self.pin)
+        self.windowPin.hide()
+    
     def showPin(self, widget, data = None):
         self.windowPin.show()
     
@@ -110,9 +122,12 @@ class PhotoBooth:
     
     def pinSubmit(self, widget, data = None):
         if self.pin == '123':
+            self.entryPin.set_text('')
+            self.pin = ''
+            self.windowPin.hide()
             self.showAdmin(None, None)
-        else:
-            print "%r" % self.pin
+#        else:
+#            print "%r" % self.pin
     
     def pinClear(self, widget, data = None):
         self.pin = '';
@@ -161,8 +176,9 @@ class PhotoBooth:
 
     def quitApp(self, widget, data = None):
         self.dialogAdmin.destroy()
+        self.windowPin.destroy()
         self.windowMain.destroy()
-        gtk.main_quit
+        gtk.main_quit()
     
 if __name__ == "__main__":
     # Create an application of the PiText class and run the main function
