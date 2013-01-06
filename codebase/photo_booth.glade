@@ -143,7 +143,7 @@
                               <object class="GtkTable" id="table2">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="n_rows">3</property>
+                                <property name="n_rows">2</property>
                                 <property name="n_columns">2</property>
                                 <child>
                                   <object class="GtkButton" id="buttonTestDevice1">
@@ -168,12 +168,6 @@
                                     <property name="active">True</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
                                 </child>
                                 <child>
                                   <object class="GtkRadioButton" id="radiobuttonVideo1">
