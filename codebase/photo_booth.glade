@@ -127,7 +127,6 @@
                 </child>
                 <child>
                   <object class="GtkHBox" id="hbox1">
-                    <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkScrolledWindow" id="scrolledwindow1">
@@ -234,7 +233,6 @@
                 <child>
                   <object class="GtkButton" id="buttonEnableSelectedVideoDevice">
                     <property name="label" translatable="yes">Enable selected video device</property>
-                    <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
@@ -281,7 +279,6 @@
                 </child>
                 <child>
                   <object class="GtkHBox" id="hbox2">
-                    <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkScrolledWindow" id="scrolledwindow2">
@@ -389,7 +386,6 @@
                 <child>
                   <object class="GtkButton" id="buttonEnableSelectedCamera">
                     <property name="label" translatable="yes">Enable selected camera</property>
-                    <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
