@@ -11,6 +11,8 @@ pygst.require("0.10")
 import gst
 import json
 
+from FullscreenToggler import *
+
 class PhotoBooth:
     
     def __init__(self):
@@ -23,6 +25,13 @@ class PhotoBooth:
         self.windowMain = self.builder.get_object("windowMain")
         self.windowMain.connect("destroy", gtk.main_quit)
         self.windowMain.show()
+
+        self.togglerObject = FullscreenToggler(self.windowMain)
+        self.windowMain.connect_object('key-press-event', FullscreenToggler.toggle, self.togglerObject)
+
+        if (self.settings['start_fullscreen']):
+            self.windowMain.fullscreen()
+
 
         self.windowMainMovieArea = self.builder.get_object("mainView")
 
@@ -81,16 +90,13 @@ class PhotoBooth:
 
         # General tab
         self.buttonFullscreen = self.builder.get_object("buttonFullscreen")
-        self.buttonFullscreen.connect("clicked", self.fullscreen)
+        self.buttonFullscreen.connect("clicked", self.enterFullscreen)
         
         self.buttonLeaveFullscreen = self.builder.get_object("buttonLeaveFullscreen")
         self.buttonLeaveFullscreen.connect("clicked", self.leaveFullscreen)
         
         self.buttonQuit = self.builder.get_object("buttonQuit")
         self.buttonQuit.connect("clicked", self.quitApp)
-
-
-
 
 
         
@@ -116,15 +122,22 @@ class PhotoBooth:
     def main(self):
         gtk.main()
     
+    def setWindowSize(self, windowObject):
+        if self.togglerObject.window_is_fullscreen:
+            windowObject.fullscreen()
+        else:
+            windowObject.unfullscreen()
+            
     # Pin functions
     
+    def showPin(self, widget, data = None):
+        self.dialogPinEntry.show()
+        self.setWindowSize(self.dialogPinEntry)
+        
     def hideDialogPin(self, widget, data = None):
         self.pin = '';
         self.entryPin.set_text(self.pin)
         self.dialogPinEntry.hide()
-    
-    def showPin(self, widget, data = None):
-        self.dialogPinEntry.show()
     
     def pinAddNumber(self, widget, data = None):
         self.pin = self.pin + data
@@ -183,13 +196,16 @@ class PhotoBooth:
     def showAdmin(self, widget, data = None):
         self.stopLiveWebcam()
         self.dialogAdmin.show()
-        adminResult = self.dialogAdmin.run()
+        self.setWindowSize(self.dialogAdmin)
 
     def hideAdmin(self, widget, data = None):
 #        self.stopTestWebcam()
         self.dialogAdmin.hide()
 
-    def fullscreen(self, widget, data = None):
+
+    # Admin dialog General tab functions
+    
+    def enterFullscreen(self, widget, data = None):
         self.windowMain.fullscreen()
         
     def leaveFullscreen(self, widget, data = None):
@@ -202,6 +218,13 @@ class PhotoBooth:
         self.dialogPinEntry.destroy()
         self.windowMain.destroy()
         gtk.main_quit()
+    
+    
+    # Admin dialog Webcam tab functions
+    
+    def detectVideoDevices(self):
+        devDirList = os.listdir('/dev')
+        
     
 if __name__ == "__main__":
     # Create an application of the PiText class and run the main function
