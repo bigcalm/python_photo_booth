@@ -9,10 +9,15 @@ pygtk.require("2.0")
 import pygst
 pygst.require("0.10")
 import gst
+import json
 
 class PhotoBooth:
     
     def __init__(self):
+        self.settings = self.loadSettings()
+        
+        print self.settings['admin_pin']
+        
         self.builder = gtk.Builder()
         self.builder.add_from_file("photo_booth.glade")
         
@@ -101,6 +106,12 @@ class PhotoBooth:
         bus.connect('message', self.on_message)
         bus.connect('sync-message::element', self.on_sync_message)
     
+    def loadSettings(self):
+        f = open('settings.json', 'r')
+        settings = f.read()
+        f.close()
+        return json.loads(settings)
+    
     def threadsInit(self):
         gtk.gdk.threads_init()
     
@@ -122,7 +133,7 @@ class PhotoBooth:
         self.entryPin.set_text(self.pin)
     
     def pinSubmit(self, widget, data = None):
-        if self.pin == '123':
+        if self.pin == self.settings['admin_pin']:
             self.entryPin.set_text('')
             self.pin = ''
             self.dialogPinEntry.hide()
