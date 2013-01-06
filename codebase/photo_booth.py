@@ -16,8 +16,6 @@ class PhotoBooth:
     def __init__(self):
         self.settings = self.loadSettings()
         
-        print self.settings['admin_pin']
-        
         self.builder = gtk.Builder()
         self.builder.add_from_file("photo_booth.glade")
         
@@ -29,7 +27,7 @@ class PhotoBooth:
         self.windowMainMovieArea = self.builder.get_object("mainView")
 
         self.buttonLiveView = self.builder.get_object("buttonLiveView")
-        self.buttonLiveView.connect("clicked", self.startWebcam)
+        self.buttonLiveView.connect("clicked", self.startStopLiveWebcam)
 
         self.buttonFinished = self.builder.get_object("buttonFinished")
         # self.buttonFinished.connect("clicked", self.showFinised)
@@ -78,8 +76,8 @@ class PhotoBooth:
         # Admin dialog
         self.dialogAdmin = self.builder.get_object("dialogAdmin")
 
-        self.buttonAdminCancel = self.builder.get_object("buttonAdminCancel")
-        self.buttonAdminCancel.connect("clicked", self.hideAdmin)
+        self.buttonAdminClose = self.builder.get_object("buttonAdminClose")
+        self.buttonAdminClose.connect("clicked", self.hideAdmin)
 
         # General tab
         self.buttonFullscreen = self.builder.get_object("buttonFullscreen")
@@ -138,8 +136,6 @@ class PhotoBooth:
             self.pin = ''
             self.dialogPinEntry.hide()
             self.showAdmin(None, None)
-#        else:
-#            print "%r" % self.pin
     
     def pinClear(self, widget, data = None):
         self.pin = '';
@@ -147,8 +143,19 @@ class PhotoBooth:
     
     # Webcam functions
     
-    def startWebcam(self, widget, data = None):
+    def startLiveWebcam(self):
         self.player.set_state(gst.STATE_PLAYING)
+        self.buttonLiveView.set_label('Gallery view')
+        
+    def stopLiveWebcam(self):
+        self.player.set_state(gst.STATE_NULL)
+        self.buttonLiveView.set_label('Live view')
+    
+    def startStopLiveWebcam(self, widget, data = None):
+        if (self.buttonLiveView.get_label() == 'Gallery view'):
+            self.stopLiveWebcam()
+        else:
+            self.startLiveWebcam()
     
     def on_message(self, bus, message):
         t = message.type
@@ -174,10 +181,12 @@ class PhotoBooth:
     # Admin dialog functions
     
     def showAdmin(self, widget, data = None):
+        self.stopLiveWebcam()
         self.dialogAdmin.show()
         adminResult = self.dialogAdmin.run()
 
     def hideAdmin(self, widget, data = None):
+#        self.stopTestWebcam()
         self.dialogAdmin.hide()
 
     def fullscreen(self, widget, data = None):
@@ -187,6 +196,8 @@ class PhotoBooth:
         self.windowMain.unfullscreen()
 
     def quitApp(self, widget, data = None):
+#        self.stopTestWebcam()
+        self.stopLiveWebcam()
         self.dialogAdmin.destroy()
         self.dialogPinEntry.destroy()
         self.windowMain.destroy()
