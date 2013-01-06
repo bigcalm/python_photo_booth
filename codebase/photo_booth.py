@@ -37,36 +37,37 @@ class PhotoBooth:
         
         
         # Pin window
-        self.windowPin = self.builder.get_object("windowPin")
+        self.dialogPinEntry = self.builder.get_object("dialogPinEntry")
         
         self.pin = '';
         self.entryPin = self.builder.get_object("entryPin")
-        self.buttonPinCancel = self.builder.get_object("buttonPinCancel")
-        self.buttonPin1 = self.builder.get_object("buttonPin1")
-        self.buttonPin2 = self.builder.get_object("buttonPin2")
-        self.buttonPin3 = self.builder.get_object("buttonPin3")
-        self.buttonPin4 = self.builder.get_object("buttonPin4")
-        self.buttonPin5 = self.builder.get_object("buttonPin5")
-        self.buttonPin6 = self.builder.get_object("buttonPin6")
-        self.buttonPin7 = self.builder.get_object("buttonPin7")
-        self.buttonPin8 = self.builder.get_object("buttonPin8")
-        self.buttonPin9 = self.builder.get_object("buttonPin9")
-        self.buttonPin0 = self.builder.get_object("buttonPin0")
-        self.buttonPinOk = self.builder.get_object("buttonPinOk")
-        self.buttonPinCancel = self.builder.get_object("buttonPinCancel")
+        self.buttonKP1 = self.builder.get_object("buttonKP1")
+        self.buttonKP2 = self.builder.get_object("buttonKP2")
+        self.buttonKP3 = self.builder.get_object("buttonKP3")
+        self.buttonKP4 = self.builder.get_object("buttonKP4")
+        self.buttonKP5 = self.builder.get_object("buttonKP5")
+        self.buttonKP6 = self.builder.get_object("buttonKP6")
+        self.buttonKP7 = self.builder.get_object("buttonKP7")
+        self.buttonKP8 = self.builder.get_object("buttonKP8")
+        self.buttonKP9 = self.builder.get_object("buttonKP9")
+        self.buttonKP0 = self.builder.get_object("buttonKP0")
+        self.buttonKPClear = self.builder.get_object("buttonKPClear")
+        self.buttonKPCancel = self.builder.get_object("buttonKPCancel")
+        self.buttonKPOK = self.builder.get_object("buttonKPOK")
         
-        self.buttonPin1.connect("clicked", self.pinAddNumber, "1")
-        self.buttonPin2.connect("clicked", self.pinAddNumber, "2")
-        self.buttonPin3.connect("clicked", self.pinAddNumber, "3")
-        self.buttonPin4.connect("clicked", self.pinAddNumber, "4")
-        self.buttonPin5.connect("clicked", self.pinAddNumber, "5")
-        self.buttonPin6.connect("clicked", self.pinAddNumber, "6")
-        self.buttonPin7.connect("clicked", self.pinAddNumber, "7")
-        self.buttonPin8.connect("clicked", self.pinAddNumber, "8")
-        self.buttonPin9.connect("clicked", self.pinAddNumber, "9")
-        self.buttonPin0.connect("clicked", self.pinAddNumber, "0")
-        self.buttonPinOk.connect("clicked", self.pinSubmit, self.pin)
-        self.buttonPinCancel.connect("clicked", self.hidePin)
+        self.buttonKP1.connect("clicked", self.pinAddNumber, "1")
+        self.buttonKP2.connect("clicked", self.pinAddNumber, "2")
+        self.buttonKP3.connect("clicked", self.pinAddNumber, "3")
+        self.buttonKP4.connect("clicked", self.pinAddNumber, "4")
+        self.buttonKP5.connect("clicked", self.pinAddNumber, "5")
+        self.buttonKP6.connect("clicked", self.pinAddNumber, "6")
+        self.buttonKP7.connect("clicked", self.pinAddNumber, "7")
+        self.buttonKP8.connect("clicked", self.pinAddNumber, "8")
+        self.buttonKP9.connect("clicked", self.pinAddNumber, "9")
+        self.buttonKP0.connect("clicked", self.pinAddNumber, "0")
+        self.buttonKPClear.connect("clicked", self.pinClear)
+        self.buttonKPCancel.connect("clicked", self.hideDialogPin)
+        self.buttonKPOK.connect("clicked", self.pinSubmit, self.pin)
         
         
         # Admin dialog
@@ -108,13 +109,13 @@ class PhotoBooth:
     
     # Pin functions
     
-    def hidePin(self, widget, data = None):
+    def hideDialogPin(self, widget, data = None):
         self.pin = '';
         self.entryPin.set_text(self.pin)
-        self.windowPin.hide()
+        self.dialogPinEntry.hide()
     
     def showPin(self, widget, data = None):
-        self.windowPin.show()
+        self.dialogPinEntry.show()
     
     def pinAddNumber(self, widget, data = None):
         self.pin = self.pin + data
@@ -124,7 +125,7 @@ class PhotoBooth:
         if self.pin == '123':
             self.entryPin.set_text('')
             self.pin = ''
-            self.windowPin.hide()
+            self.dialogPinEntry.hide()
             self.showAdmin(None, None)
 #        else:
 #            print "%r" % self.pin
@@ -176,7 +177,7 @@ class PhotoBooth:
 
     def quitApp(self, widget, data = None):
         self.dialogAdmin.destroy()
-        self.windowPin.destroy()
+        self.dialogPinEntry.destroy()
         self.windowMain.destroy()
         gtk.main_quit()
     
