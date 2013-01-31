@@ -1,0 +1,3 @@
+[submodule "codebase/piggyphoto"]
+	path = codebase/piggyphoto
+	url = git://github.com/alexdu/piggyphoto.git
